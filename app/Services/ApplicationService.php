@@ -35,8 +35,8 @@ class ApplicationService
 
     public function comment(array $data, Application $application): application
     {
-        $plainmail = new PlainMail();
-        $success = $plainmail
+        $plainMail = new PlainMail();
+        $success = $plainMail
             ->to($application['email'])
             ->send($data['comment']);
 
