@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Application;
 
+use App\Mail\PlainMail;
 
 class ApplicationService
 {  
@@ -32,9 +33,21 @@ class ApplicationService
 		return $application;
 	}
 
-	public function update(array $data, Application $application): application
+	public function comment(array $data, Application $application): application
 	{
-		$application->update($data);
+		$plainmail = new PlainMail();
+		$success = $plainmail
+			->to($application['email'])
+			->send($data['comment']);
+
+		if (!$success) {
+			return false;
+		}
+
+		$application->comment = $data['comment'];
+		$application->status = 'Resolved';
+
+		$application->update();
 
 		return $application;
 	}

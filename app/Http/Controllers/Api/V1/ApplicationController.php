@@ -21,7 +21,7 @@ class ApplicationController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth:sanctum')->except(['store']);
+        $this->middleware('auth:sanctum')->except(['store']);
         $this->middleware('role:admin,editor')->except(['store']);
     }
 
@@ -58,9 +58,9 @@ class ApplicationController extends Controller
     /**
      * comment resource.
      */
-    public function comment(CommentFormRequest $request, Application $application)
+    public function comment(CommentFormRequest $request, ApplicationService $service, Application $application)
     {
-        $application = $service->comment($application);
+        $application = $service->comment($request->validated(), $application);
 
         return new ApplicationResource($application);
     }

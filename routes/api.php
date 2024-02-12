@@ -21,8 +21,8 @@ Route::post('/register',User\CreateController::class);
 Route::post('/login', User\LoginController::class);
 Route::get('/logout', User\LogoutController::class)->middleware('auth:sanctum');
 
-Route::apiResource('applications', ApplicationController::class)->only([
+Route::apiResource('/applications', ApplicationController::class)->only([
     'index', 'show', 'store', 'destroy'
 ]);
 
-Route::post('applications/comment}', [ApplicationController::class, 'comment']);
+Route::put('/applications/{application}', [ApplicationController::class, 'comment'])->name('applications.comment');
