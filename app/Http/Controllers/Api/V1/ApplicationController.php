@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Api\V1\Applications\IndexFormRequest;
 use App\Http\Requests\Api\V1\Applications\StoreFormRequest;
+use App\Http\Requests\Api\V1\Applications\CommentFormRequest;
 
 use App\Http\Resources\Api\V1\ApplicationResource;
 use App\Services\ApplicationService;
@@ -20,7 +21,8 @@ class ApplicationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except(['store']);
+        // $this->middleware('auth:sanctum')->except(['store']);
+        $this->middleware('role:admin,editor')->except(['store']);
     }
 
     /**
@@ -54,11 +56,13 @@ class ApplicationController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * comment resource.
      */
-    public function update(Request $request, string $id)
+    public function comment(CommentFormRequest $request, Application $application)
     {
-        //
+        $application = $service->comment($application);
+
+        return new ApplicationResource($application);
     }
 
     /**
