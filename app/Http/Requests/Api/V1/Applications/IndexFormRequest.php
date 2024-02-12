@@ -27,6 +27,8 @@ class IndexFormRequest extends FormRequest
         return [
             'page' => ['integer'],
             'count' => ['integer'],
+            'sortBy' => ['string'],
+            'operator' => ['string']
         ];
     }
 
@@ -34,13 +36,14 @@ class IndexFormRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $sortValue = $this->input('sortBy');
+            $operator = $this->input('operator');
 
-            if (!$sortValue) {
-                return true;
+            if ($sortValue && !in_array($sortValue, ['status', 'created_at'])) {
+                $validator->errors()->add('sortBy', 'The sortBy value must be either status or created_at.');
             }
 
-            if (!in_array($sortValue, ['status', 'created_at'])) {
-                $validator->errors()->add('sortBy', 'The sortBy value must be either status or created_at.');
+            if ($operator && !in_array($operator, ['asc', 'desc'])) {
+                $validator->errors()->add('operator', 'The operator value must be either asc or desc.');
             }
         });
     }

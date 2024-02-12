@@ -9,51 +9,51 @@ use App\Mail\PlainMail;
 
 class ApplicationService
 {  
-	public function show(Application $application): Application
-	{
-		return $application;
-	}
+    public function show(Application $application): Application
+    {
+        return $application;
+    }
 
-	public function index(array $data)
-	{
-		$count = !empty($data['count']) ? $data['count'] : 10;
+    public function index(array $data)
+    {
+        $count = !empty($data['count']) ? $data['count'] : 10;
 
-		$applications = Application::query();
-		$applications->when(!empty($data['sortBy']), function ($q) use ($data) {
-		    return $q->orderBy($data['sortBy'], 'desc');
-		});
+        $applications = Application::query();
+        $applications->when(!empty($data['sortBy']), function ($q) use ($data) {
+            return $q->orderBy($data['sortBy'], $data['operator']??'asc');
+        });
 
-		return $applications->paginate($count);
-	}
+        return $applications->paginate($count);
+    }
 
-	public function store(array $data): Application
-	{
-		$application = Application::create($data);
+    public function store(array $data): Application
+    {
+        $application = Application::create($data);
 
-		return $application;
-	}
+        return $application;
+    }
 
-	public function comment(array $data, Application $application): application
-	{
-		$plainmail = new PlainMail();
-		$success = $plainmail
-			->to($application['email'])
-			->send($data['comment']);
+    public function comment(array $data, Application $application): application
+    {
+        $plainmail = new PlainMail();
+        $success = $plainmail
+            ->to($application['email'])
+            ->send($data['comment']);
 
-		if (!$success) {
-			return false;
-		}
+        if (!$success) {
+            return false;
+        }
 
-		$application->comment = $data['comment'];
-		$application->status = 'Resolved';
+        $application->comment = $data['comment'];
+        $application->status = 'Resolved';
 
-		$application->update();
+        $application->update();
 
-		return $application;
-	}
+        return $application;
+    }
 
-	public function destroy(Application $application)
-	{
-		return $application->delete();
-	}
+    public function destroy(Application $application)
+    {
+        return $application->delete();
+    }
 }
