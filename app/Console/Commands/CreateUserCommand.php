@@ -62,6 +62,6 @@ class CreateUserCommand extends Command
             return $newUser->createToken(config('app.name'));
         });
 
-        $this->info('User created successfully. Bear token: '. $token->plainTextToken);
+        $this->info('User created successfully. Bearer token: '. $token->plainTextToken);
     }
 }
