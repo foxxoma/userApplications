@@ -19,3 +19,4 @@
 ## Документация
 По тз были запросы "requests". Заметил только в конце.
 
+**Postman.json в корне проекта ( userApplications.postman_collection.json )
